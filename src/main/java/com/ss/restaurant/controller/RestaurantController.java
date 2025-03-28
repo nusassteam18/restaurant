@@ -1,15 +1,13 @@
 package com.ss.restaurant.controller;
 
+import com.ss.restaurant.dto.RestaurantDTO;
 import com.ss.restaurant.entity.Restaurant;
 import com.ss.restaurant.service.RestaurantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,20 +26,17 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Restaurant>> getRestaurants() {
+    public ResponseEntity<List<RestaurantDTO>> getRestaurants() {
 
-        List<Restaurant> restaurants = restaurantService.getRestaurants();
+        List<RestaurantDTO> restaurants = restaurantService.getRestaurants();
 
-        if (restaurants != null)
-            return ResponseEntity.ok(restaurants);
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(restaurants);
     }
 
     @GetMapping("/{restaurantId}")
-    public ResponseEntity<Restaurant> getRestaurant(@PathVariable Long restaurantId) {
+    public ResponseEntity<RestaurantDTO> getRestaurant(@PathVariable Long restaurantId) {
 
-        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
+        RestaurantDTO restaurant = restaurantService.getRestaurant(restaurantId);
 
         if (restaurant != null)
             return ResponseEntity.ok(restaurant);

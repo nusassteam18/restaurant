@@ -1,5 +1,6 @@
 package com.ss.restaurant.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -26,6 +27,10 @@ public class Product {
     private BigDecimal price;
     @Column(name="image_id", length = 1000)
     private String imageId;
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JsonBackReference
+    private Restaurant restaurantId;
 
     public Product() {
     }
@@ -75,6 +80,14 @@ public class Product {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
     @Override

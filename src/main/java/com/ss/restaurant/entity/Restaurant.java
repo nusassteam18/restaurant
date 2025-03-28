@@ -1,6 +1,9 @@
 package com.ss.restaurant.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +34,14 @@ public class Restaurant {
     @Column(name="image_id", length = 1000)
     private String imageId;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     @JoinColumn(name = "restaurant_id")
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
     private List<Product> products = new ArrayList<>();
 
     public Restaurant() {
