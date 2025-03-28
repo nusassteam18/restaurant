@@ -1,6 +1,9 @@
 package com.ss.restaurant.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +34,35 @@ public class Restaurant {
     @Column(name="image_id", length = 1000)
     private String imageId;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "restaurant_id")
+    // Rounds the average score to 1 decimal place
+    // If 2 dps of average score >= 0.05, round up
+    // If 2 dps of average score < 0.05, round down
+    @Formula("(SELECT ROUND(COALESCE(AVG(r.score), 0), 1) FROM rating r WHERE r.restaurant_id = restaurant_id)")
+    private double averageScore;
+
+    @Formula("(SELECT COUNT(r.rating_id) FROM rating r WHERE r.restaurant_id = restaurant_id)")
+    private int rateCount;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "restaurant_id",
+                foreignKey = @ForeignKey(name = "FK_PRODUCT_RESTAURANT_ID",
+                        foreignKeyDefinition = "FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id) ON UPDATE CASCADE ON DELETE CASCADE")
+    )
     private List<Product> products = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "restaurant_id",
+                foreignKey = @ForeignKey(name = "FK_RATING_RESTAURANT_ID",
+                                        foreignKeyDefinition = "FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id) ON UPDATE CASCADE ON DELETE CASCADE")
+    )
+    private List<Rating> ratings = new ArrayList<>();
 
     public Restaurant() {
     }
 
-    public Restaurant(Long restaurantId, String name, String address, String contact, String description, String imageId, List<Product> products) {
+    public Restaurant(Long restaurantId, String name, String address, String contact, String description, String imageId, List<Product> products, List<Rating> ratings) {
         this.restaurantId = restaurantId;
         this.name = name;
         this.address = address;
@@ -46,6 +70,7 @@ public class Restaurant {
         this.description = description;
         this.imageId = imageId;
         this.products = products;
+        this.ratings = ratings;
     }
 
     public Restaurant(Long restaurantId, String name, String address, String contact, String description, String imageId) {
@@ -105,12 +130,36 @@ public class Restaurant {
         this.imageId = imageId;
     }
 
+    public double getAverageScore() {
+        return averageScore;
+    }
+
+    public void setAverageScore(double averageScore) {
+        this.averageScore = averageScore;
+    }
+
+    public int getRateCount() {
+        return rateCount;
+    }
+
+    public void setRateCount(int rateCount) {
+        this.rateCount = rateCount;
+    }
+
     public List<Product> getProducts() {
         return products;
     }
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
     }
 
     @Override
@@ -122,7 +171,10 @@ public class Restaurant {
                 ", contact='" + contact + '\'' +
                 ", description='" + description + '\'' +
                 ", imageId='" + imageId + '\'' +
+                ", averageScore='" + averageScore + '\'' +
+                ", rateCount='" + rateCount + '\'' +
                 ", products=" + products +
+//                ", ratings=" + ratings +
                 '}';
     }
 }

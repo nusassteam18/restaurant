@@ -19,6 +19,8 @@ public class Product {
     )
     @Column(name="product_id")
     private Long productId;
+    @Column(name="restaurant_id")
+    private Long restaurantId;
     @Column(length = 100, nullable = false)
     private String name;
     @Column(length = 200)
@@ -53,6 +55,14 @@ public class Product {
         this.productId = productId;
     }
 
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Long restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
     public String getName() {
         return name;
     }
@@ -77,10 +87,19 @@ public class Product {
         this.price = price;
     }
 
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
                 "productId=" + productId +
+                ", restaurantId=" + restaurantId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
