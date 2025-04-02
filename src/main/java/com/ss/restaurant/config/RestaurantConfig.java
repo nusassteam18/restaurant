@@ -68,12 +68,16 @@ public class RestaurantConfig {
         restaurant2.setProducts(Arrays.asList(product3, product4, product7, product8));
         restaurant3.setProducts(Arrays.asList(product5, product6));
 
-        Rating rating1 = new Rating(null, 1L, getRandomScore());
-        Rating rating2 = new Rating(null, 2L, getRandomScore());
-        Rating rating3 = new Rating(null, 1L, getRandomScore());
-        Rating rating4 = new Rating(null, 2L, getRandomScore());
-        Rating rating5 = new Rating(null, 1L, getRandomScore());
-        Rating rating6 = new Rating(null, 2L, getRandomScore());
+//        Restaurant restaurant1 = restaurantRepository.findById(1L).orElseThrow();
+//        Restaurant restaurant2 = restaurantRepository.findById(2L).orElseThrow();
+//        Restaurant restaurant3 = restaurantRepository.findById(3L).orElseThrow();
+
+        Rating rating1 = new Rating(null, 1L, getRandomScore(), "okay lah");
+        Rating rating2 = new Rating(null, 2L, getRandomScore(), "sucks");
+        Rating rating3 = new Rating(null, 1L, getRandomScore(), "What kind of food is this??");
+        Rating rating4 = new Rating(null, 2L, getRandomScore(), "Excellent food!");
+        Rating rating5 = new Rating(null, 1L, getRandomScore(), "Shiok");
+        Rating rating6 = new Rating(null, 2L, getRandomScore(), "So so");
 
         restaurant1.setRatings(Arrays.asList(rating1, rating2));
         restaurant2.setRatings(Arrays.asList(rating3, rating4));

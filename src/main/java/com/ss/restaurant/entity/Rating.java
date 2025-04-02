@@ -1,6 +1,10 @@
 package com.ss.restaurant.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.util.Date;
 
 @Entity
 @Table
@@ -22,14 +26,25 @@ public class Rating {
     @Column(name="customer_id")
     private Long customerId;
     private double score;
+    @Column(length = 2000)
+    private String description;
+
+    @CreationTimestamp
+    @Column(name="created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name="updated_at", nullable = false, updatable = false)
+    private Date updatedAt;
 
     public Rating() {
     }
 
-    public Rating(Long ratingId, Long customerId, double score) {
+    public Rating(Long ratingId, Long customerId, double score, String description) {
         this.ratingId = ratingId;
         this.customerId = customerId;
         this.score = score;
+        this.description = description;
     }
 
     public Long getRatingId() {
@@ -64,6 +79,30 @@ public class Rating {
         this.score = score;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         return "Rating{" +
@@ -71,6 +110,9 @@ public class Rating {
                 ", restaurantId=" + restaurantId +
                 ", customerId=" + customerId +
                 ", score=" + score +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }
