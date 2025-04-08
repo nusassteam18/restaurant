@@ -2,6 +2,7 @@ package com.ss.restaurant.service;
 
 import com.ss.restaurant.entity.Product;
 import com.ss.restaurant.repository.ProductRepository;
+import com.ss.restaurant.responseDTO.ProductTruncatedDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,12 @@ public class ProductService {
         List<Product> products = productRepository.findByRestaurantId(restaurantId);
 
         return products;
+    }
+
+    public List<ProductTruncatedDTO> getProductsTruncatedByRestaurantId(Long restaurantId) {
+        List<ProductTruncatedDTO> productTruncatedDTOS = productRepository.findProductsTruncatedByRestaurantId(restaurantId);
+
+        return productTruncatedDTOS;
     }
 
 }

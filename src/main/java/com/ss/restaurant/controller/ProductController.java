@@ -2,6 +2,7 @@ package com.ss.restaurant.controller;
 
 import com.ss.restaurant.entity.Product;
 import com.ss.restaurant.entity.Product;
+import com.ss.restaurant.responseDTO.ProductTruncatedDTO;
 import com.ss.restaurant.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,17 @@ public class ProductController {
 
         if (products != null)
             return ResponseEntity.ok(products);
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/truncated/{restaurantId}")
+    public ResponseEntity<List<ProductTruncatedDTO>> getProductsTruncatedByRestaurantId(@PathVariable Long restaurantId) {
+
+        List<ProductTruncatedDTO> productTruncatedDTOS = productService.getProductsTruncatedByRestaurantId(restaurantId);
+
+        if (productTruncatedDTOS != null)
+            return ResponseEntity.ok(productTruncatedDTOS);
 
         return ResponseEntity.notFound().build();
     }
