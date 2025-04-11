@@ -1,10 +1,6 @@
 package com.ss.restaurant.responseDTO;
 
-import com.ss.restaurant.entity.Rating;
-import org.apache.catalina.User;
-
 import java.util.Date;
-import java.util.List;
 
 public class UserRatingResponseDTO {
     private double score;
