@@ -4,11 +4,14 @@ import com.ss.restaurant.entity.Rating;
 import com.ss.restaurant.entity.Restaurant;
 import com.ss.restaurant.repository.RatingRepository;
 import com.ss.restaurant.repository.RestaurantRepository;
+import com.ss.restaurant.requestDTO.RatingRequestDTO;
 import com.ss.restaurant.responseDTO.RatingResponseDTO;
+import com.ss.restaurant.responseDTO.UserRatingResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RatingService {
@@ -33,6 +36,30 @@ public class RatingService {
                 restaurant.getAverageScore(),
                 restaurant.getRateCount(),
                 ratings
+        );
+    }
+
+    public Optional<UserRatingResponseDTO> getRatingByRestaurantIdAndCustomerId(Long restaurantId, Long customerId){
+        return ratingRepository.findByRestaurantIdAndCustomerId(restaurantId, customerId)
+                .map(rating -> new UserRatingResponseDTO(
+                        rating.getScore(),
+                        rating.getDescription(),
+                        rating.getCreatedAt()
+                ));
+    }
+
+    public UserRatingResponseDTO submitRating(RatingRequestDTO ratingRequestDTO) {
+        Rating rating = new Rating();
+        rating.setRestaurantId(ratingRequestDTO.getRestaurantId());
+        rating.setCustomerId(ratingRequestDTO.getCustomerId());
+        rating.setScore(ratingRequestDTO.getScore());
+        rating.setDescription(ratingRequestDTO.getDescription());
+
+        Rating saved = ratingRepository.save(rating);
+        return new UserRatingResponseDTO(
+                saved.getScore(),
+                saved.getDescription(),
+                saved.getCreatedAt()
         );
     }
 }
