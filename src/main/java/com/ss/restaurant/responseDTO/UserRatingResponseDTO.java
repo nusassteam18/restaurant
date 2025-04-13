@@ -3,16 +3,25 @@ package com.ss.restaurant.responseDTO;
 import java.util.Date;
 
 public class UserRatingResponseDTO {
+    private Long ratingId;
     private double score;
     private String description;
     private Date createdAt;
 
     public UserRatingResponseDTO() {}
 
-    public UserRatingResponseDTO(double score, String description, Date createdAt) {
+    public UserRatingResponseDTO(Long ratingId, double score, String description, Date createdAt) {
+        this.ratingId = ratingId;
         this.score = score;
         this.description = description;
         this.createdAt = createdAt;
+    }
+
+    public Long getRatingId() {
+        return ratingId;
+    }
+    public void setRatingId(Long ratingId) {
+        this.ratingId = ratingId;
     }
 
     public double getScore() {

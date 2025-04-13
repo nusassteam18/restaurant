@@ -4,7 +4,8 @@ import com.ss.restaurant.entity.Rating;
 import com.ss.restaurant.entity.Restaurant;
 import com.ss.restaurant.repository.RatingRepository;
 import com.ss.restaurant.repository.RestaurantRepository;
-import com.ss.restaurant.requestDTO.RatingRequestDTO;
+import com.ss.restaurant.requestDTO.rating.RatingRequestDTO;
+import com.ss.restaurant.requestDTO.rating.RatingUpdateDTO;
 import com.ss.restaurant.responseDTO.RatingResponseDTO;
 import com.ss.restaurant.responseDTO.UserRatingResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class RatingService {
     public Optional<UserRatingResponseDTO> getRatingByRestaurantIdAndCustomerId(Long restaurantId, Long customerId){
         return ratingRepository.findByRestaurantIdAndCustomerId(restaurantId, customerId)
                 .map(rating -> new UserRatingResponseDTO(
+                        rating.getRatingId(),
                         rating.getScore(),
                         rating.getDescription(),
                         rating.getCreatedAt()
@@ -57,9 +59,24 @@ public class RatingService {
 
         Rating saved = ratingRepository.save(rating);
         return new UserRatingResponseDTO(
+                saved.getRatingId(),
                 saved.getScore(),
                 saved.getDescription(),
                 saved.getCreatedAt()
+        );
+    }
+
+    public Optional<Rating> getRatingByRatingIdAndRestaurantIdAndCustomerId(Long ratingId, Long restaurantId, Long customerId){
+        return ratingRepository.findByRatingIdAndRestaurantIdAndCustomerId(ratingId, restaurantId, customerId);
+    }
+
+    public UserRatingResponseDTO updateRating(Rating rating){
+        Rating updated = ratingRepository.save(rating);
+        return new UserRatingResponseDTO(
+                updated.getRatingId(),
+                updated.getScore(),
+                updated.getDescription(),
+                updated.getCreatedAt()
         );
     }
 }

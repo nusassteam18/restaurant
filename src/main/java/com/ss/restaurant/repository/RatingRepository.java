@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     List<Rating> findByRestaurantId(Long restaurantId);
     Optional<Rating> findByRestaurantIdAndCustomerId(Long restaurantId, Long customerId);
+    Optional<Rating> findByRatingIdAndRestaurantIdAndCustomerId(Long ratingId, Long restaurantId, Long customerId);
 }
