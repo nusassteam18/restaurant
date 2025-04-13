@@ -1,12 +1,16 @@
 package com.ss.restaurant.controller;
 
-import com.ss.restaurant.requestDTO.RatingRequestDTO;
+import com.ss.restaurant.entity.Rating;
+import com.ss.restaurant.requestDTO.rating.RatingRequestDTO;
+import com.ss.restaurant.requestDTO.rating.RatingUpdateDTO;
 import com.ss.restaurant.responseDTO.RatingResponseDTO;
 import com.ss.restaurant.responseDTO.UserRatingResponseDTO;
 import com.ss.restaurant.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 //@CrossOrigin(origins = "*")
@@ -40,6 +44,22 @@ public class RatingController {
     @PostMapping
     public ResponseEntity<UserRatingResponseDTO> submitRating(@RequestBody RatingRequestDTO dto) {
         UserRatingResponseDTO response = ratingService.submitRating(dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{ratingId}")
+    public ResponseEntity<UserRatingResponseDTO> updateRating(@PathVariable Long ratingId, @RequestBody RatingUpdateDTO dto) {
+        Optional<Rating> currentRating = ratingService.getRatingByRatingIdAndRestaurantIdAndCustomerId(ratingId, dto.getRestaurantId(), dto.getCustomerId());
+
+        if(currentRating.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        Rating rating = currentRating.get();
+        rating.setScore(dto.getScore());
+        rating.setDescription(dto.getDescription());
+
+        UserRatingResponseDTO response = ratingService.updateRating(rating);
         return ResponseEntity.ok(response);
     }
 }

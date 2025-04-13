@@ -1,10 +1,19 @@
-package com.ss.restaurant.requestDTO;
+package com.ss.restaurant.requestDTO.rating;
 
-public class RatingRequestDTO {
+public class RatingUpdateDTO {
+    private Long ratingId;
     private Long restaurantId;
     private Long customerId;
     private String description;
     private Double score;
+
+    public Long getRatingId() {
+        return ratingId;
+    }
+
+    public void setRatingId(Long ratingId) {
+        this.ratingId = ratingId;
+    }
 
     public Long getRestaurantId() {
         return restaurantId;
