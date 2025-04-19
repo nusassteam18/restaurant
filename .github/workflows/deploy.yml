@@ -1,0 +1,51 @@
+name: Build and Deploy Spring Boot App to AWS Elastic Beanstalk
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml # -B runs in non-interactive (batch) mode
+
+      - name: Zip the deployment package
+        run: |
+          jar_file=$(find target -maxdepth 1 -name '*.jar' -print -quit)
+          if [ -z "$jar_file" ]; then
+            echo "Error: No JAR file found in target/"
+            exit 1
+          fi
+          echo "Zipping $jar_file"
+          zip -j deploy.zip "$jar_file"
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.EB_APPLICATION_NAME }}
+          environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
+          region: us-east-1
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
+          existing_bucket_name: ${{ secrets.EB_BUCKET_NAME }}
+          wait_for_deployment: true
