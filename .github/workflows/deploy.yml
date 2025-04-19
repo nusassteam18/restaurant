@@ -48,4 +48,4 @@ jobs:
           version_label: ${{ github.sha }}
           deployment_package: deploy.zip
           existing_bucket_name: ${{ secrets.EB_BUCKET_NAME }}
-          wait_for_deployment: true
+          wait_for_deployment: false
