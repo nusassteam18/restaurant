@@ -1,13 +1,14 @@
 package com.ss.restaurant.service;
 
 import com.ss.restaurant.entity.Restaurant;
+import com.ss.restaurant.repository.ProductRepository;
 import com.ss.restaurant.repository.RestaurantRepository;
+import com.ss.restaurant.responseDTO.ProductTruncatedDTO;
+import com.ss.restaurant.responseDTO.RestaurantProductsTruncatedDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,16 +19,13 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
+    private final ProductRepository productRepository;
+
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository) {
+    public RestaurantService(RestaurantRepository restaurantRepository, ProductRepository productRepository) {
         this.restaurantRepository = restaurantRepository;
+        this.productRepository = productRepository;
     }
-
-    @Autowired
-    public RestTemplate restTemplate;
-
-    @Value("${users.url:http://www.google.com}")
-    private String USERS_URL;
 
     public List<Restaurant> getRestaurants(){
         return restaurantRepository.findAll();
@@ -39,5 +37,21 @@ public class RestaurantService {
         return restaurantOptional.orElse(null);
     }
 
+    public RestaurantProductsTruncatedDTO getRestaurantProductsTruncatedDTO(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
 
+        List<ProductTruncatedDTO> productTruncatedDTOS = productRepository.findProductsTruncatedByRestaurantId(restaurantId);
+
+        RestaurantProductsTruncatedDTO rptDTO = new RestaurantProductsTruncatedDTO();
+
+        if (restaurant != null) {
+            rptDTO.setRestaurantId(restaurant.getRestaurantId());
+            rptDTO.setName(restaurant.getName());
+        }
+
+        if (productTruncatedDTOS != null) {
+            rptDTO.setProductTruncatedDTOS(productTruncatedDTOS);
+        }
+        return rptDTO;
+    }
 }

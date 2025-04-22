@@ -1,6 +1,7 @@
 package com.ss.restaurant.controller;
 
 import com.ss.restaurant.entity.Restaurant;
+import com.ss.restaurant.responseDTO.RestaurantProductsTruncatedDTO;
 import com.ss.restaurant.service.RestaurantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,5 +48,24 @@ public class RestaurantController {
             return ResponseEntity.ok(restaurant);
 
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{restaurantId}/restaurantName")
+    public ResponseEntity<String> getRestaurantName(@PathVariable Long restaurantId) {
+
+        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
+
+        if (restaurant != null)
+            return ResponseEntity.ok(restaurant.getName());
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{restaurantId}/productsTruncated")
+    public ResponseEntity<RestaurantProductsTruncatedDTO> getRestaurantProductsTruncated(@PathVariable Long restaurantId) {
+
+        RestaurantProductsTruncatedDTO rptDTO = restaurantService.getRestaurantProductsTruncatedDTO(restaurantId);
+
+        return ResponseEntity.ok(rptDTO);
     }
 }
